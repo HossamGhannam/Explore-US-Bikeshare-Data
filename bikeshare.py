@@ -18,27 +18,27 @@ def get_filters():
     print('Hello! Let\'s explore some US bikeshare data!')
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
     city = None
-    city = input("Please enter one of the following city (Chicago, New York City or Washington): \n")
+    city = input("Please enter one of the following city (Chicago, New York City or Washington): \n").lower()
     #validating the user entry
-    while city.lower() not in ['chicago', 'new york city', 'washington']:
+    while city not in ['chicago', 'new york city', 'washington']:
         print('Sorry, you entered a city that does not exists! Please try again \n')
-        city = input("Please enter one of the following city (Chicago, New York City or Washington), again: \n")
+        city = input("Please enter one of the following city (Chicago, New York City or Washington), again: \n").lower()
 
     # get user input for month (all, january, february, ... , june)
     month = None
-    month = input("Please enter a month (january, february, march, april, may, june), or enter all (for all months): \n")
+    month = input("Please enter a month (january, february, march, april, may, june), or enter all (for all months): \n").lower()
     #validating the user entry
-    while month.lower() not in ['all','january', 'february', 'march', 'april', 'may', 'june']:
+    while month not in ['all','january', 'february', 'march', 'april', 'may', 'june']:
         print('Sorry, you entered a month that does not exists! Please try again')
-        month = input("Please enter a month (january, february, march, april, may, june), or enter all (for all months) again: \n")
+        month = input("Please enter a month (january, february, march, april, may, june), or enter all (for all months) again: \n").lower()
 
     # get user input for day of week (all, monday, tuesday, ... sunday)
     day = None
-    day = input("Please enter a day (saturday, sunday, monday, tuesday, wednesday, thursday, friday), or all (for all days) : \n")
+    day = input("Please enter a day (saturday, sunday, monday, tuesday, wednesday, thursday, friday), or all (for all days) : \n").lower()
     #validating the user entry
-    while day.lower() not in ['all', 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
+    while day not in ['all', 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']:
         print('Sorry, you entered a day that does not exists! Please try again\n')
-        day = input("Please enter a day (saturday, sunday, monday, tuesday, wednesday, thursday, friday), or all (for all days) : \n")
+        day = input("Please enter a day (saturday, sunday, monday, tuesday, wednesday, thursday, friday), or all (for all days) : \n").lower()
 
     print('-'*40)
     return city, month, day
@@ -140,11 +140,11 @@ def trip_duration_stats(df):
 
     # display total travel time
     total_travel_time = df['Trip Duration'].sum()
-    print("Total tavel time is: ", total_travel_time)
+    print("Total tavel time is: ", round(total_travel_time), 'sec.')
 
     # display mean travel time
     mean_travel_time = df['Trip Duration'].mean()
-    print('Mean travel time is: ', mean_travel_time)
+    print('Mean travel time is: ', round(mean_travel_time), 'sec.')
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -184,20 +184,21 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
-
+    
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
         DisplayCounter = 0
-
+        
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df)
-
+        
         DisplayData = input('\nWould you like to see more data? Enter yes or no\n')
         while DisplayData.lower() in 'yes':
+            pd.set_option('display.max_columns',200)
             print(df.iloc[DisplayCounter : DisplayCounter + 5])
             DisplayCounter = DisplayCounter + 5
             DisplayData = input('\nWould you like to see more data? Enter yes or no\n')
